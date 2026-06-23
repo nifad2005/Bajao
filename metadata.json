@@ -1,0 +1,6 @@
+{
+  "name": "Bajao",
+  "description": "একটি নতুন ও জিরো-ক্লাটার মিউজিক প্লেয়ার যা স্বচ্ছতা এবং স্মুথ আলফা ফেইড স্টাইল অনুসরণ করে।",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
