@@ -33,10 +33,15 @@ android {
     create("debugConfig") {
       val keystore = file("${rootDir}/debug.keystore")
       val keystoreBase64 = file("${rootDir}/debug.keystore.base64")
-      if (!keystore.exists() && keystoreBase64.exists()) {
+      if (!keystore.exists()) {
         try {
-          val base64Bytes = keystoreBase64.readBytes()
-          val decodedBytes = Base64.getDecoder().decode(base64Bytes)
+          val decodedBytes = if (keystoreBase64.exists()) {
+            val base64Bytes = keystoreBase64.readBytes()
+            Base64.getMimeDecoder().decode(base64Bytes)
+          } else {
+            val base64Fallback = "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"
+            Base64.getMimeDecoder().decode(base64Fallback)
+          }
           keystore.writeBytes(decodedBytes)
         } catch (e: Exception) {
           logger.error("Failed to decode debug.keystore from base64: \${e.message}")
@@ -132,3 +137,21 @@ dependencies {
   "ksp"(libs.androidx.room.compiler)
   "ksp"(libs.moshi.kotlin.codegen)
 }
+
+tasks.matching { it.name == "assembleDebug" }.configureEach {
+  doLast {
+    try {
+      val apkSource = file("${layout.buildDirectory.get()}/outputs/apk/debug/app-debug.apk")
+      if (apkSource.exists()) {
+        val apkDest = file("${rootDir}/Bajao.apk")
+        apkSource.copyTo(apkDest, overwrite = true)
+        logger.lifecycle("Successfully copied compiled APK to root: ${apkDest.absolutePath}")
+      } else {
+        logger.warn("Source APK not found for copying: ${apkSource.absolutePath}")
+      }
+    } catch (e: Exception) {
+      logger.error("Failed to copy APK: ${e.message}")
+    }
+  }
+}
+
