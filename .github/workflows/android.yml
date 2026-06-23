@@ -15,14 +15,29 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Make gradlew executable
-        run: chmod +x gradlew
-
-      - name: Build with Gradle
-        run: ./gradlew assembleDebug
+      - name: Find and Build with Gradle
+        run: |
+          # Gradlew ফাইলটি খুঁজে বের করা
+          GRADLEW_PATH=$(find . -name gradlew | head -n 1)
+          
+          if [ -z "$GRADLEW_PATH" ]; then
+            echo "Error: gradlew file not found!"
+            exit 1
+          fi
+          
+          echo "Found gradlew at: $GRADLEW_PATH"
+          GRADLEW_DIR=$(dirname "$GRADLEW_PATH")
+          
+          # পারমিশন ঠিক করা
+          chmod +x "$GRADLEW_PATH"
+          
+          # বিল্ড করা
+          cd "$GRADLEW_DIR"
+          ./gradlew assembleDebug
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          # এটি যেকোনো সাব-ফোল্ডারে তৈরি হওয়া APK খুঁজে বের করবে
+          path: '**/build/outputs/apk/debug/*.apk'
